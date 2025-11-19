@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
@@ -89,15 +90,15 @@
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl p-6">
-        <header class="text-center mb-6">
+    <div class="w-full max-w-6xl mx-auto p-6">
+        <header class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">謎題產生器</h1>
             <p class="text-gray-600 mt-1">從您的單字列表建立填字遊戲或單字搜尋遊戲。</p>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Panel: Input -->
-            <div class="lg:col-span-1 bg-gray-50 p-4 rounded-lg border">
+        <!-- 1. Input Section (Center) -->
+        <main class="w-full max-w-3xl mx-auto mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-xl border">
                 <h2 class="text-xl font-semibold mb-3">1. 輸入單字</h2>
                 <textarea id="vocab-input" class="w-full h-48 p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="輸入單字，一行一個...&#10;格式：&#10;單字: 解釋"></textarea>
                 
@@ -110,8 +111,9 @@
                 <h2 class="text-xl font-semibold mb-2 mt-4">3. 設定格子大小 (選填)</h2>
                 <input type="number" id="grid-size-input" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="留空則自動計算">
 
+                <div id="status-message" class="text-center p-3 mt-4 mb-2 rounded-lg hidden"></div>
 
-                <button id="generate-btn" class="mt-6 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                <button id="generate-btn" class="mt-2 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     產生遊戲
                 </button>
                 
@@ -123,38 +125,37 @@
                     下載解答 (PNG)
                 </button>
             </div>
-
-            <!-- Right Panel: Game Output -->
-            <div class="lg:col-span-2">
-                <div id="status-message" class="text-center p-4 mb-4 rounded-lg hidden"></div>
-                
-                <!-- Crossword Container -->
-                <div id="crossword-container">
-                    <div id="puzzle-wrapper" class="flex flex-col xl:flex-row gap-6">
-                        <div id="puzzle-container" class="overflow-auto w-full"><div id="puzzle-grid" class="crossword-grid mx-auto"></div></div>
-                        <div id="clues-container" class="w-full xl:w-2/3">
-                            <div id="clues-across-wrapper" class="hidden"><h3 class="text-lg font-semibold mb-2 border-b pb-1">橫向提示</h3><ul id="clues-across" class="space-y-1 text-sm"></ul></div>
-                            <div id="clues-down-wrapper" class="mt-4 hidden"><h3 class="text-lg font-semibold mb-2 border-b pb-1">縱向提示</h3><ul id="clues-down" class="space-y-1 text-sm"></ul></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Word Search Container -->
-                <div id="wordsearch-container" class="hidden">
-                     <div class="flex flex-col xl:flex-row gap-6">
-                        <div id="wordsearch-grid-container" class="overflow-auto"><div id="wordsearch-grid" class="wordsearch-grid mx-auto"></div></div>
-                        <div id="wordsearch-list-container" class="w-full xl:w-1/3">
-                            <h3 class="text-lg font-semibold mb-2 border-b pb-1">找出這些單字:</h3>
-                            <ul id="wordsearch-list" class="space-y-1 text-sm"></ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </main>
 
-        <!-- Answer Key Section -->
-        <div id="answer-key-container" class="hidden mt-8 p-6 bg-gray-50 rounded-lg border">
+        <!-- 2. Puzzle Output Section (Independent Area) -->
+        <div id="puzzle-section" class="hidden w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl p-6 mb-8 border">
+            <h2 class="text-2xl font-bold text-center mb-6">題目</h2>
+            
+            <!-- Crossword Container -->
+            <div id="crossword-container">
+                <div id="puzzle-wrapper" class="flex flex-col xl:flex-row gap-6 justify-center">
+                    <div id="puzzle-container" class="overflow-auto w-full flex justify-center"><div id="puzzle-grid" class="crossword-grid"></div></div>
+                    <div id="clues-container" class="w-full xl:w-1/3">
+                        <div id="clues-across-wrapper" class="hidden"><h3 class="text-lg font-semibold mb-2 border-b pb-1">橫向提示</h3><ul id="clues-across" class="space-y-1 text-sm"></ul></div>
+                        <div id="clues-down-wrapper" class="mt-4 hidden"><h3 class="text-lg font-semibold mb-2 border-b pb-1">縱向提示</h3><ul id="clues-down" class="space-y-1 text-sm"></ul></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Word Search Container -->
+            <div id="wordsearch-container" class="hidden">
+                 <div class="flex flex-col xl:flex-row gap-6 justify-center">
+                    <div id="wordsearch-grid-container" class="overflow-auto flex justify-center"><div id="wordsearch-grid" class="wordsearch-grid"></div></div>
+                    <div id="wordsearch-list-container" class="w-full xl:w-1/3">
+                        <h3 class="text-lg font-semibold mb-2 border-b pb-1">找出這些單字:</h3>
+                        <ul id="wordsearch-list" class="space-y-1 text-sm"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Answer Key Section -->
+        <div id="answer-key-container" class="hidden w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl p-6 border">
             <h2 class="text-2xl font-bold text-center mb-4">解答</h2>
             <div id="answer-grid-wrapper" class="flex justify-center items-center overflow-auto">
                  <div id="answer-grid"></div>
@@ -383,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusMessage: document.getElementById('status-message'),
         tabCrossword: document.getElementById('tab-crossword'),
         tabWordSearch: document.getElementById('tab-wordsearch'),
+        puzzleSection: document.getElementById('puzzle-section'),
         crosswordContainer: document.getElementById('crossword-container'),
         puzzleGrid: document.getElementById('puzzle-grid'),
         cluesAcrossList: document.getElementById('clues-across'),
@@ -424,7 +426,9 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.tabWordSearch.classList.toggle('bg-white', game === 'wordsearch');
         elements.tabWordSearch.classList.toggle('text-gray-500', game !== 'wordsearch');
         
+        // Hide results when switching to encourage regenerating
         elements.answerKeyContainer.classList.add('hidden');
+        elements.puzzleSection.classList.add('hidden');
         elements.downloadPuzzleBtn.classList.add('hidden');
         elements.downloadAnswerBtn.classList.add('hidden');
     }
@@ -432,6 +436,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MAIN GENERATION HANDLER ---
     function handleGenerate() {
         elements.answerKeyContainer.classList.add('hidden');
+        elements.puzzleSection.classList.add('hidden');
+
         const vocabulary = elements.vocabInput.value.split('\n').filter(w => w.trim() !== '');
         
         if (vocabulary.length < 2) { 
@@ -483,6 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStatus(unplaced, '單字搜尋遊戲');
         }
         elements.answerKeyContainer.classList.remove('hidden');
+        elements.puzzleSection.classList.remove('hidden');
         elements.downloadPuzzleBtn.classList.remove('hidden');
         elements.downloadAnswerBtn.classList.remove('hidden');
     }
